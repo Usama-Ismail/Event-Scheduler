@@ -1,4 +1,6 @@
+using Event_Scheduler.Api.Models;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,14 @@ builder.Services.AddHangfire(configuration => configuration
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
-        .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+        .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection"))
+);
 
 builder.Services.AddHangfireServer();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"))
+);
 
 var app = builder.Build();
 
