@@ -56,7 +56,7 @@ namespace Event_Scheduler.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Event_Scheduler.Api.Models.Participant", b =>
@@ -88,7 +88,7 @@ namespace Event_Scheduler.Api.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Participants");
+                    b.ToTable("Participants", (string)null);
                 });
 
             modelBuilder.Entity("Event_Scheduler.Api.Models.Participant", b =>
