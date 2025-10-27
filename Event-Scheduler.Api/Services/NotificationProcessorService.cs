@@ -23,7 +23,7 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
                         logger.LogInformation($"{e.Title} event is planned for you {participant.Name} at {e.StartDate}");
                     if (_notificationConfiguration.UseEmail)
                     {
-                        //Need to fill in the logic 
+                        //If you want to add notification through email that can be added later
                     }
                 }
             }

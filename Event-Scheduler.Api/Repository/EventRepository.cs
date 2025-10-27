@@ -7,6 +7,8 @@ public interface IEventRepository
 {
     Task<List<Event>> GetActiveEvents(CancellationToken cancellationToken);
     Task<Event> AddEventAsync(Event entity, CancellationToken cancellationToken);
+    Task<Event?> GetEventAsync(int id, CancellationToken cancellationToken);
+    Task<Event> UpdateEventAsync(Event entity, CancellationToken cancellationToken);
 }
 public class EventRepository(ApplicationDbContext context) : IEventRepository
 {
@@ -26,5 +28,17 @@ public class EventRepository(ApplicationDbContext context) : IEventRepository
                .Where(x => x.StartDate >= dateTimeNow && x.StartDate <= upcoming)
                .Include(x => x.Participants)
                .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Event?> GetEventAsync(int id, CancellationToken cancellationToken)
+    {
+        return await context.Events.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<Event> UpdateEventAsync(Event entity, CancellationToken cancellationToken)
+    {
+        context.Events.Update(entity);
+        await context.SaveChangesAsync(cancellationToken);
+        return entity;
     }
 }
