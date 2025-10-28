@@ -1,4 +1,5 @@
 using Event_Scheduler.Api.Models;
+using Event_Scheduler.Api.Repository;
 using Event_Scheduler.Api.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,12 @@ builder.Services.AddHangfireServer();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"))
 );
+
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
+
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IParticipantService, ParticipantService>();
 
 var app = builder.Build();
 
