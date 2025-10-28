@@ -1,4 +1,5 @@
 using Event_Scheduler.Api.Models;
+using Event_Scheduler.Api.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,3 +39,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+
+    recurringJobManager.AddOrUpdate<INotificationProcessorService>(
+        "process-events-recurring",
+        s => s.ProcessEventsAsync(CancellationToken.None),
+        Cron.Minutely
+    );
+}
