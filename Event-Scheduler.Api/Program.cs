@@ -40,13 +40,10 @@ app.MapControllers();
 
 app.Run();
 
-using (var scope = app.Services.CreateScope())
-{
-    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
 
-    recurringJobManager.AddOrUpdate<INotificationProcessorService>(
-        "process-events-recurring",
-        s => s.ProcessEventsAsync(CancellationToken.None),
-        Cron.Minutely
-    );
-}
+RecurringJob.AddOrUpdate<INotificationProcessorService>(
+    "process-events-recurring",
+    s => s.ProcessEventsAsync(CancellationToken.None),
+    Cron.Minutely
+);
+
