@@ -27,7 +27,7 @@ namespace Event_Scheduler.Api.Extensions
             return p;
         }
 
-        public static ParticipantResponseDto Map(this Participant p)
+        public static ParticipantResponseDto MapToResponse(this Participant p)
         {
             return new ParticipantResponseDto
             {
