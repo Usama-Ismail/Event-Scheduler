@@ -4,6 +4,7 @@ using Event_Scheduler.Api.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,12 +53,22 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var jobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+    jobManager.AddOrUpdate<INotificationProcessorService>(
+        "process-events-recurring",
+        s => s.ProcessEventsAsync(CancellationToken.None),
+        Cron.Minutely
+    );
+});
+
+app.UseHangfireDashboard();
+
 app.Run();
 
 
-RecurringJob.AddOrUpdate<INotificationProcessorService>(
-    "process-events-recurring",
-    s => s.ProcessEventsAsync(CancellationToken.None),
-    Cron.Minutely
-);
+
+
+
 
