@@ -30,5 +30,6 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
                 }
             }
         }
+        logger.Information("Event processor finished");
     }
 }

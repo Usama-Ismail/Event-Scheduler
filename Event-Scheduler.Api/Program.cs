@@ -1,3 +1,4 @@
+using Event_Scheduler.Api;
 using Event_Scheduler.Api.Models;
 using Event_Scheduler.Api.Repository;
 using Event_Scheduler.Api.Services;
@@ -7,6 +8,8 @@ using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<NotificationServiceConfiguration>(builder.Configuration.GetSection(NotificationServiceConfiguration.Position));
 
 // Add services to the container.
 
