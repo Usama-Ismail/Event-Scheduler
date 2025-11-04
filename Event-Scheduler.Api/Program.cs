@@ -22,6 +22,9 @@ builder.Services.AddHangfire(configuration => configuration
 
 builder.Services.AddHangfireServer();
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"))
 );
@@ -31,6 +34,8 @@ builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
+
+builder.Services.AddScoped<INotificationProcessorService, NotificationProcessorService>();
 
 var app = builder.Build();
 
