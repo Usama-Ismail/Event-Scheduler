@@ -1,4 +1,6 @@
-﻿using Event_Scheduler.Api.Repository;
+﻿using Event_Scheduler.Api.Constants;
+using Event_Scheduler.Api.Models;
+using Event_Scheduler.Api.Repository;
 using Microsoft.Extensions.Options;
 using ILogger = Serilog.ILogger;
 
@@ -17,6 +19,7 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
         var events = await eventRepo.GetActiveEvents(cancellationToken);
         if (_notificationConfiguration.IsEnabled)
         {
+            var eventsToUpdate = new List<Event>();
             foreach (var e in events)
             {
                 foreach (var participant in e.Participants)
@@ -28,6 +31,14 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
                         //If you want to add notification through email that can be added later
                     }
                 }
+
+                e.Status = EventConstant.TRIGGERED;
+                eventsToUpdate.Add(e);
+            }
+
+            if (events.Any())
+            {
+                await eventRepo.UpdateEventAsync(eventsToUpdate, cancellationToken);
             }
         }
         logger.Information("Event processor finished");

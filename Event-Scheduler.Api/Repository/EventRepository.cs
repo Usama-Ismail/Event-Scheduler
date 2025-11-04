@@ -16,6 +16,7 @@ public interface IEventRepository
     Task<Event> AddEventAsync(Event entity, CancellationToken cancellationToken);
     Task<Event?> GetEventAsync(int id, CancellationToken cancellationToken);
     Task<Event> UpdateEventAsync(Event entity, CancellationToken cancellationToken);
+    Task<List<Event>> UpdateEventAsync(List<Event> events, CancellationToken cancellationToken);
 }
 public class EventRepository(ApplicationDbContext context) : IEventRepository
 {
@@ -48,5 +49,12 @@ public class EventRepository(ApplicationDbContext context) : IEventRepository
         context.Events.Update(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;
+    }
+
+    public async Task<List<Event>> UpdateEventAsync(List<Event> events, CancellationToken cancellationToken)
+    {
+        context.Events.UpdateRange(events);
+        await context.SaveChangesAsync(cancellationToken);
+        return events;
     }
 }
