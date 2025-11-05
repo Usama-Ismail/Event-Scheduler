@@ -16,9 +16,10 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
     public async Task ProcessEventsAsync(CancellationToken cancellationToken)
     {
         logger.Information("Event processor started");
-        var events = await eventRepo.GetActiveEvents(cancellationToken);
+
         if (_notificationConfiguration.IsEnabled)
         {
+            var events = await eventRepo.GetActiveEvents(cancellationToken);
             var eventsToUpdate = new List<Event>();
             foreach (var e in events)
             {
@@ -41,6 +42,7 @@ public class NotificationProcessorService(IEventRepository eventRepo, IOptions<N
                 await eventRepo.UpdateEventAsync(eventsToUpdate, cancellationToken);
             }
         }
+
         logger.Information("Event processor finished");
     }
 }
